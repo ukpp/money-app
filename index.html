@@ -2,22 +2,19 @@ HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>Money App 💰</title>
+<title>Money App PRO 💰</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     font-family: Arial;
-    text-align: center;
     background: #0f172a;
     color: white;
+    text-align: center;
     margin: 0;
 }
 
-h1 {
-    color: #22c55e;
-    margin-top: 20px;
-}
+h1 { color: #22c55e; }
 
 .card {
     background: #1e293b;
@@ -26,91 +23,125 @@ h1 {
     border-radius: 20px;
 }
 
-.balance {
-    font-size: 30px;
-    color: #22c55e;
+input {
+    padding: 10px;
+    width: 80%;
+    margin: 10px;
+    border-radius: 10px;
+    border: none;
 }
 
 button {
     padding: 12px 20px;
-    border: none;
     background: #22c55e;
-    color: black;
+    border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
     font-weight: bold;
 }
 
-button:hover {
-    background: #16a34a;
+.balance {
+    font-size: 30px;
+    color: #22c55e;
 }
 </style>
 </head>
 
 <body>
 
-<h1>💰 Money App</h1>
+<h1>💰 Money App PRO</h1>
+
+<!-- LOGIN -->
+<div class="card" id="loginBox">
+    <h2>Login / Register</h2>
+    <input type="text" id="username" placeholder="Enter username">
+    <br>
+    <button onclick="login()">Enter</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
 
 <div class="card">
-    <h2>Your Balance</h2>
+    <h2 id="welcome"></h2>
     <div class="balance" id="balance">0</div>
 </div>
 
 <div class="card">
-    <h2>Earn Money 🎯</h2>
-    <p>Bonyeza kupata coins</p>
-    <button onclick="earn()">Earn +10</button>
+    <h3>Earn Money 🎯</h3>
+    <button onclick="earn()">+10</button>
 </div>
 
 <div class="card">
-    <h2>Daily Bonus 🎁</h2>
-    <button onclick="bonus()">Get Bonus</button>
+    <h3>Withdraw 💸</h3>
+    <input type="number" id="amount" placeholder="Enter amount">
+    <button onclick="withdraw()">Withdraw</button>
+</div>
+
 </div>
 
 <script>
-// LOAD BALANCE
-let balance = localStorage.getItem("money");
+let user = localStorage.getItem("user");
 
-if (balance == null) {
-    balance = 0;
-} else {
-    balance = parseInt(balance);
+if (user) {
+    startApp(user);
 }
 
-update();
+function login() {
+    let name = document.getElementById("username").value;
+    if (name == "") return alert("Weka jina");
 
-// UPDATE UI
-function update() {
-    document.getElementById("balance").innerText = balance + " TZS";
-}
+    localStorage.setItem("user", name);
 
-// EARN
-function earn() {
-    balance += 10;
-    save();
-}
-
-// BONUS (1 time per day simple)
-function bonus() {
-    let last = localStorage.getItem("bonus");
-
-    if (last == new Date().toDateString()) {
-        alert("Tayari umeshachukua bonus leo 😅");
-    } else {
-        balance += 50;
-        localStorage.setItem("bonus", new Date().toDateString());
-        save();
-        alert("Umepewa 50 TZS 🎉");
+    if (!localStorage.getItem(name)) {
+        localStorage.setItem(name, 0);
     }
+
+    startApp(name);
 }
 
-// SAVE
-function save() {
-    localStorage.setItem("money", balance);
-    update();
+function startApp(name) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    document.getElementById("welcome").innerText = "Karibu " + name;
+
+    loadBalance();
+}
+
+function loadBalance() {
+    let user = localStorage.getItem("user");
+    let bal = localStorage.getItem(user);
+    document.getElementById("balance").innerText = bal + " TZS";
+}
+
+function earn() {
+    let user = localStorage.getItem("user");
+    let bal = parseInt(localStorage.getItem(user));
+
+    bal += 10;
+    localStorage.setItem(user, bal);
+
+    loadBalance();
+}
+
+function withdraw() {
+    let user = localStorage.getItem("user");
+    let bal = parseInt(localStorage.getItem(user));
+    let amount = parseInt(document.getElementById("amount").value);
+
+    if (amount > bal) {
+        alert("Salio haitoshi 😅");
+    } else if (amount < 100) {
+        alert("Minimum ni 100 TZS");
+    } else {
+        bal -= amount;
+        localStorage.setItem(user, bal);
+        loadBalance();
+        alert("Withdraw request sent 💸 (demo)");
+    }
 }
 </script>
 
 </body>
-</html>
+    </html>
