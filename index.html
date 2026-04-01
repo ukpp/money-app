@@ -2,14 +2,14 @@ HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>Entertainment App</title>
+<title>Entertainment App PRO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     font-family: Arial;
     text-align: center;
-    background: #111;
+    background: linear-gradient(135deg, #000, #1a1a1a);
     color: white;
     margin: 0;
 }
@@ -23,63 +23,83 @@ h1 {
     background: #222;
     margin: 20px;
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px #00ffcc33;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     background: #00ffcc;
     color: black;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #00ccaa;
 }
 
 audio {
     margin-top: 10px;
+    width: 100%;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 Entertainment App 🔥</h1>
+<h1>🔥 Entertainment App PRO 🔥</h1>
 
-<!-- JOKES -->
+<!-- JOKES API -->
 <div class="card">
-    <h2>😂 Jokes</h2>
-    <p id="joke">Bonyeza kuona joke</p>
+    <h2>😂 Jokes (Online)</h2>
+    <p id="joke">Bonyeza kupata joke kutoka internet</p>
     <button onclick="getJoke()">Get Joke</button>
 </div>
 
-<!-- MUSIC -->
+<!-- MUSIC PLAYER -->
 <div class="card">
-    <h2>🎵 Music</h2>
-    <p>Play music hapa chini</p>
-
-    <audio controls>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <h2>🎵 Music Player</h2>
+    <audio id="player" controls></audio>
+    <br>
+    <button onclick="nextSong()">Next Song ▶️</button>
 </div>
 
 <!-- GAMES -->
 <div class="card">
     <h2>🎮 Games</h2>
-    <p>Coming soon...</p>
+    <p>Coming soon (tutaweka game next 😎)</p>
 </div>
 
 <script>
-function getJoke() {
-    let jokes = [
-        "Teacher: Why HTML? Student: Because life needs structure 😂",
-        "Why did the computer laugh? Because it had a byte 😂",
-        "Programmer alilia? Alipata bug 🐛😂",
-        "Why JavaScript? Because HTML can't think 😂"
-    ];
+// JOKE API
+async function getJoke() {
+    let res = await fetch("https://official-joke-api.appspot.com/random_joke");
+    let data = await res.json();
+    document.getElementById("joke").innerText = data.setup + " 😂 " + data.punchline;
+}
 
-    let random = Math.floor(Math.random() * jokes.length);
-    document.getElementById("joke").innerText = jokes[random];
+// MUSIC LIST
+let songs = [
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+];
+
+let index = 0;
+let player = document.getElementById("player");
+
+// LOAD FIRST SONG
+player.src = songs[index];
+
+function nextSong() {
+    index++;
+    if (index >= songs.length) index = 0;
+    player.src = songs[index];
+    player.play();
 }
 </script>
 
