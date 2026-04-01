@@ -2,35 +2,39 @@ HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>Entertainment App PRO</title>
+<title>Money App 💰</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     font-family: Arial;
     text-align: center;
-    background: linear-gradient(135deg, #000, #1a1a1a);
+    background: #0f172a;
     color: white;
     margin: 0;
 }
 
 h1 {
-    color: #00ffcc;
+    color: #22c55e;
     margin-top: 20px;
 }
 
 .card {
-    background: #222;
+    background: #1e293b;
     margin: 20px;
     padding: 20px;
     border-radius: 20px;
-    box-shadow: 0 0 10px #00ffcc33;
+}
+
+.balance {
+    font-size: 30px;
+    color: #22c55e;
 }
 
 button {
     padding: 12px 20px;
     border: none;
-    background: #00ffcc;
+    background: #22c55e;
     color: black;
     border-radius: 10px;
     cursor: pointer;
@@ -39,67 +43,72 @@ button {
 }
 
 button:hover {
-    background: #00ccaa;
-}
-
-audio {
-    margin-top: 10px;
-    width: 100%;
+    background: #16a34a;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 Entertainment App PRO 🔥</h1>
+<h1>💰 Money App</h1>
 
-<!-- JOKES API -->
 <div class="card">
-    <h2>😂 Jokes (Online)</h2>
-    <p id="joke">Bonyeza kupata joke kutoka internet</p>
-    <button onclick="getJoke()">Get Joke</button>
+    <h2>Your Balance</h2>
+    <div class="balance" id="balance">0</div>
 </div>
 
-<!-- MUSIC PLAYER -->
 <div class="card">
-    <h2>🎵 Music Player</h2>
-    <audio id="player" controls></audio>
-    <br>
-    <button onclick="nextSong()">Next Song ▶️</button>
+    <h2>Earn Money 🎯</h2>
+    <p>Bonyeza kupata coins</p>
+    <button onclick="earn()">Earn +10</button>
 </div>
 
-<!-- GAMES -->
 <div class="card">
-    <h2>🎮 Games</h2>
-    <p>Coming soon (tutaweka game next 😎)</p>
+    <h2>Daily Bonus 🎁</h2>
+    <button onclick="bonus()">Get Bonus</button>
 </div>
 
 <script>
-// JOKE API
-async function getJoke() {
-    let res = await fetch("https://official-joke-api.appspot.com/random_joke");
-    let data = await res.json();
-    document.getElementById("joke").innerText = data.setup + " 😂 " + data.punchline;
+// LOAD BALANCE
+let balance = localStorage.getItem("money");
+
+if (balance == null) {
+    balance = 0;
+} else {
+    balance = parseInt(balance);
 }
 
-// MUSIC LIST
-let songs = [
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-];
+update();
 
-let index = 0;
-let player = document.getElementById("player");
+// UPDATE UI
+function update() {
+    document.getElementById("balance").innerText = balance + " TZS";
+}
 
-// LOAD FIRST SONG
-player.src = songs[index];
+// EARN
+function earn() {
+    balance += 10;
+    save();
+}
 
-function nextSong() {
-    index++;
-    if (index >= songs.length) index = 0;
-    player.src = songs[index];
-    player.play();
+// BONUS (1 time per day simple)
+function bonus() {
+    let last = localStorage.getItem("bonus");
+
+    if (last == new Date().toDateString()) {
+        alert("Tayari umeshachukua bonus leo 😅");
+    } else {
+        balance += 50;
+        localStorage.setItem("bonus", new Date().toDateString());
+        save();
+        alert("Umepewa 50 TZS 🎉");
+    }
+}
+
+// SAVE
+function save() {
+    localStorage.setItem("money", balance);
+    update();
 }
 </script>
 
