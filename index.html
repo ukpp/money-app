@@ -1,40 +1,40 @@
-HTML
+ HTML
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Entertainment App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entertainment App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #111;
-      color: white;
-      text-align: center;
-      margin: 0;
-    }
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #111;
+    color: white;
+    margin: 0;
+}
 
-    h1 {
-      color: #00ffcc;
-      margin-top: 20px;
-    }
+h1 {
+    color: #00ffcc;
+    margin-top: 20px;
+}
 
-    .card {
-      background: #222;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 15px;
-    }
+.card {
+    background: #222;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+}
 
-    button {
-      background: #00ffcc;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-  </style>
+button {
+    padding: 10px 20px;
+    background: #00ffcc;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+</style>
 </head>
 
 <body>
@@ -43,52 +43,49 @@ HTML
 
 <!-- JOKES -->
 <div class="card">
-  <h2>😂 Jokes</h2>
-  <p id="joke">Bonyeza kupata joke</p>
-  <button onclick="getJoke()">Get Joke</button>
+    <h2>😂 Jokes</h2>
+    <p id="joke">Bonyeza kuona joke</p>
+    <button onclick="getJoke()">Get Joke</button>
 </div>
 
 <!-- MUSIC -->
 <div class="card">
-  <h2>🎵 Music</h2>
-  <p>Cheza mziki hapa chini</p>
-
-  <audio controls>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  </audio>
+    <h2>🎵 Music</h2>
+    <p>Cheza mziki</p>
+    <audio id="music" controls>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 </div>
 
 <!-- GAME -->
 <div class="card">
-  <h2>🎮 Game</h2>
-  <p>Guess number (1 - 5)</p>
-  <input type="number" id="guess" placeholder="Weka namba">
-  <br><br>
-  <button onclick="checkGame()">Play</button>
-  <p id="result"></p>
+    <h2>🎮 Game</h2>
+    <p id="gameText">Guess number 1 - 5</p>
+    <input type="number" id="guess">
+    <button onclick="playGame()">Try</button>
 </div>
 
 <script>
 function getJoke() {
-  let jokes = [
-    "Teacher: Why are you late? Student: Because of sign 'School Ahead, Go Slow!' 😂",
-    "Why did the computer go to school? To improve its byte! 😄",
-    "Why are programmers bad at relationships? Because they always use 'if else' 😂"
-  ];
-
-  let random = Math.floor(Math.random() * jokes.length);
-  document.getElementById("joke").innerText = jokes[random];
+    let jokes = [
+        "Teacher: Why are you late? Student: Using 4G 😅",
+        "Njaa kali kuliko ex 😂",
+        "Ukiona silent group jua admin amechoka 😂",
+        "Maisha ni ngumu lakini wifi ikikatika ndo shida 😭"
+    ];
+    let random = Math.floor(Math.random() * jokes.length);
+    document.getElementById("joke").innerText = jokes[random];
 }
 
-function checkGame() {
-  let number = Math.floor(Math.random() * 5) + 1;
-  let user = document.getElementById("guess").value;
+function playGame() {
+    let num = Math.floor(Math.random() * 5) + 1;
+    let user = document.getElementById("guess").value;
 
-  if(user == number) {
-    document.getElementById("result").innerText = "🎉 Umeshinda!";
-  } else {
-    document.getElementById("result").innerText = "❌ Jaribu tena! Ilikuwa " + number;
-  }
+    if (user == num) {
+        document.getElementById("gameText").innerText = "Umeshinda! 🎉";
+    } else {
+        document.getElementById("gameText").innerText = "Umeshindwa 😅 ilikuwa " + num;
+    }
 }
 </script>
 
