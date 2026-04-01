@@ -2,146 +2,92 @@ HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>Money App PRO 💰</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-    font-family: Arial;
-    background: #0f172a;
-    color: white;
-    text-align: center;
-    margin: 0;
-}
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
 
-h1 { color: #22c55e; }
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #111;
+      color: white;
+      margin: 0;
+    }
 
-.card {
-    background: #1e293b;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 20px;
-}
+    h1 {
+      color: #00ffcc;
+    }
 
-input {
-    padding: 10px;
-    width: 80%;
-    margin: 10px;
-    border-radius: 10px;
-    border: none;
-}
+    .card {
+      background: #222;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 15px;
+    }
 
-button {
-    padding: 12px 20px;
-    background: #22c55e;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
+    button {
+      background: #00ffcc;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-.balance {
-    font-size: 30px;
-    color: #22c55e;
-}
-</style>
+    iframe, audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>💰 Money App PRO</h1>
+<h1>🔥 Entertainment App 🔥</h1>
 
-<!-- LOGIN -->
-<div class="card" id="loginBox">
-    <h2>Login / Register</h2>
-    <input type="text" id="username" placeholder="Enter username">
-    <br>
-    <button onclick="login()">Enter</button>
-</div>
-
-<!-- APP -->
-<div id="app" style="display:none;">
-
+<!-- JOKES -->
 <div class="card">
-    <h2 id="welcome"></h2>
-    <div class="balance" id="balance">0</div>
+  <h2>😂 Jokes</h2>
+  <p id="joke">Bonyeza kupata joke</p>
+  <button onclick="getJoke()">Get Joke</button>
 </div>
 
+<!-- MUSIC -->
 <div class="card">
-    <h3>Earn Money 🎯</h3>
-    <button onclick="earn()">+10</button>
+  <h2>🎵 Music</h2>
+  <audio controls>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
 </div>
 
+<!-- VIDEO -->
 <div class="card">
-    <h3>Withdraw 💸</h3>
-    <input type="number" id="amount" placeholder="Enter amount">
-    <button onclick="withdraw()">Withdraw</button>
-</div>
-
+  <h2>📺 Video</h2>
+  <iframe height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+  frameborder="0" allowfullscreen></iframe>
 </div>
 
 <script>
-let user = localStorage.getItem("user");
+function getJoke() {
+  let jokes = [
+    "Teacher: Why HTML? Student: Because life needs structure 😂",
+    "Programmer: I love bugs… they make me rich 😎",
+    "Why JavaScript? Because Java was too serious 😂",
+    "Coding usiku = mafanikio kesho 🔥"
+  ];
 
-if (user) {
-    startApp(user);
+  let random = Math.floor(Math.random() * jokes.length);
+  document.getElementById("joke").innerText = jokes[random];
 }
 
-function login() {
-    let name = document.getElementById("username").value;
-    if (name == "") return alert("Weka jina");
-
-    localStorage.setItem("user", name);
-
-    if (!localStorage.getItem(name)) {
-        localStorage.setItem(name, 0);
-    }
-
-    startApp(name);
-}
-
-function startApp(name) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    document.getElementById("welcome").innerText = "Karibu " + name;
-
-    loadBalance();
-}
-
-function loadBalance() {
-    let user = localStorage.getItem("user");
-    let bal = localStorage.getItem(user);
-    document.getElementById("balance").innerText = bal + " TZS";
-}
-
-function earn() {
-    let user = localStorage.getItem("user");
-    let bal = parseInt(localStorage.getItem(user));
-
-    bal += 10;
-    localStorage.setItem(user, bal);
-
-    loadBalance();
-}
-
-function withdraw() {
-    let user = localStorage.getItem("user");
-    let bal = parseInt(localStorage.getItem(user));
-    let amount = parseInt(document.getElementById("amount").value);
-
-    if (amount > bal) {
-        alert("Salio haitoshi 😅");
-    } else if (amount < 100) {
-        alert("Minimum ni 100 TZS");
-    } else {
-        bal -= amount;
-        localStorage.setItem(user, bal);
-        loadBalance();
-        alert("Withdraw request sent 💸 (demo)");
-    }
+// PWA install
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
 }
 </script>
 
 </body>
-    </html>
+</html>
+⚠️ HATUA YA MWISHO
