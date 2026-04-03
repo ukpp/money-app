@@ -1,6 +1,6 @@
 HTML
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +13,6 @@ body {
     color: white;
     font-family: Arial;
 }
-
-/* SCREENS */
-.screen { display: none; }
-.active { display: block; }
 
 /* FEED */
 .container {
@@ -64,89 +60,57 @@ video {
     padding: 10px;
 }
 
-/* INPUT */
-input, textarea {
-    width: 90%;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    border: none;
-}
-
-button {
-    padding: 10px;
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
+/* UPLOAD BOX */
+.upload-box {
+    position: fixed;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    background: #222;
+    padding: 20px;
+    display: none;
+    border-radius: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="login" class="screen active">
-<h2 style="text-align:center;">UkaApp Login</h2>
-<input type="text" id="username" placeholder="Username">
-<button onclick="login()">Ingia</button>
-</div>
-
-<!-- HOME -->
-<div id="home" class="screen">
+<!-- FEED -->
 <div class="container" id="feed"></div>
-</div>
 
-<!-- PROFILE -->
-<div id="profile" class="screen">
-<h2 style="text-align:center;">Profile</h2>
-<p id="userDisplay" style="text-align:center;"></p>
+<!-- UPLOAD -->
+<div class="upload-box" id="uploadBox">
+<h3>Upload Video</h3>
+<input type="file"><br><br>
+<textarea placeholder="Caption..."></textarea><br>
+<button onclick="closeUpload()">Post</button>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-<div onclick="showScreen('home')">🏠</div>
-<div onclick="showScreen('profile')">👤</div>
+<div onclick="loadVideos()">🏠</div>
+<div onclick="openUpload()">➕</div>
+<div>👤</div>
 </div>
 
 <script>
-let currentUser = localStorage.getItem("user");
 
-/* VIDEO ZA ONLINE (NDIO ZITAFANYA KAZI GITHUB) */
+/* VIDEO ZA HAKIKA (ZITATOKEA) */
 let videos = [
 {
 url: "https://www.w3schools.com/html/mov_bbb.mp4",
 caption: "🔥 Karibu UkaApp",
 user: "admin",
-likes: 0,
-comments: []
+likes: 0
 },
 {
 url: "https://www.w3schools.com/html/movie.mp4",
 caption: "😂 Burudani tu",
 user: "user",
-likes: 0,
-comments: []
+likes: 0
 }
 ];
-
-function login() {
-    let user = document.getElementById("username").value;
-    if (!user) return alert("Weka username");
-
-    localStorage.setItem("user", user);
-    currentUser = user;
-
-    document.getElementById("userDisplay").innerText = "User: " + user;
-
-    showScreen("home");
-    loadVideos();
-}
-
-function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
 
 function loadVideos() {
     let feed = document.getElementById("feed");
@@ -177,16 +141,21 @@ function like(i) {
 }
 
 function comment() {
-    let text = prompt("Andika comment:");
+    let text = prompt("Comment:");
     if (text) alert("Comment: " + text);
 }
 
-/* AUTO LOGIN */
-if (currentUser) {
-    document.getElementById("userDisplay").innerText = "User: " + currentUser;
-    showScreen("home");
-    loadVideos();
+function openUpload() {
+    document.getElementById("uploadBox").style.display = "block";
 }
+
+function closeUpload() {
+    document.getElementById("uploadBox").style.display = "none";
+}
+
+/* MUHIMU – LOAD VIDEO AUTOMATIC */
+loadVideos();
+
 </script>
 
 </body>
