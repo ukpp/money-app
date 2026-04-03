@@ -14,6 +14,10 @@ body {
     font-family: Arial;
 }
 
+/* SCREENS */
+.screen { display: none; }
+.active { display: block; }
+
 /* FEED */
 .container {
     height: 100vh;
@@ -47,6 +51,7 @@ video {
 .actions div {
     margin: 15px 0;
     cursor: pointer;
+    font-size: 18px;
 }
 
 /* NAV */
@@ -60,7 +65,7 @@ video {
     padding: 10px;
 }
 
-/* UPLOAD BOX */
+/* UPLOAD */
 .upload-box {
     position: fixed;
     top: 20%;
@@ -71,46 +76,99 @@ video {
     display: none;
     border-radius: 10px;
 }
+
+/* INPUT */
+input, textarea {
+    width: 90%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    padding: 10px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- FEED -->
+<!-- LOGIN -->
+<div id="login" class="screen active">
+<h2 style="text-align:center;">UkaApp Login</h2>
+<input type="text" id="username" placeholder="Username">
+<button onclick="login()">Ingia</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
 <div class="container" id="feed"></div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen">
+<h2 style="text-align:center;">Profile</h2>
+<p id="userDisplay" style="text-align:center;"></p>
+</div>
 
 <!-- UPLOAD -->
 <div class="upload-box" id="uploadBox">
 <h3>Upload Video</h3>
-<input type="file"><br><br>
-<textarea placeholder="Caption..."></textarea><br>
-<button onclick="closeUpload()">Post</button>
+<input type="file" id="videoInput"><br>
+<textarea id="caption" placeholder="Caption..."></textarea>
+<button onclick="postVideo()">Post</button>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-<div onclick="loadVideos()">🏠</div>
+<div onclick="showScreen('home')">🏠</div>
 <div onclick="openUpload()">➕</div>
-<div>👤</div>
+<div onclick="showScreen('profile')">👤</div>
 </div>
 
 <script>
+let currentUser = localStorage.getItem("user");
 
-/* VIDEO ZA HAKIKA (ZITATOKEA) */
-let videos = [
+/* DEFAULT VIDEOS (ZIONEKANE GITHUB) */
+let videos = JSON.parse(localStorage.getItem("videos")) || [
 {
 url: "https://www.w3schools.com/html/mov_bbb.mp4",
 caption: "🔥 Karibu UkaApp",
 user: "admin",
-likes: 0
+likes: 0,
+comments: []
 },
 {
 url: "https://www.w3schools.com/html/movie.mp4",
 caption: "😂 Burudani tu",
 user: "user",
-likes: 0
+likes: 0,
+comments: []
 }
 ];
+
+function login() {
+    let user = document.getElementById("username").value;
+    if (!user) return alert("Weka username");
+
+    localStorage.setItem("user", user);
+    currentUser = user;
+
+    document.getElementById("userDisplay").innerText = "User: " + user;
+
+    showScreen("home");
+    loadVideos();
+}
+
+function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
 
 function loadVideos() {
     let feed = document.getElementById("feed");
@@ -127,8 +185,8 @@ function loadVideos() {
             </div>
 
             <div class="actions">
-                <div onclick="like(${i})">❤️ <span id="like${i}">${v.likes}</span></div>
-                <div onclick="comment()">💬</div>
+                <div onclick="like(${i})">❤️ ${v.likes}</div>
+                <div onclick="comment(${i})">💬</div>
             </div>
         </div>
         `;
@@ -137,25 +195,55 @@ function loadVideos() {
 
 function like(i) {
     videos[i].likes++;
-    document.getElementById("like"+i).innerText = videos[i].likes;
+    save();
+    loadVideos();
 }
 
-function comment() {
-    let text = prompt("Comment:");
-    if (text) alert("Comment: " + text);
+function comment(i) {
+    let text = prompt("Andika comment:");
+    if (text) {
+        videos[i].comments.push(text);
+        save();
+        alert("Comment imewekwa!");
+    }
 }
 
 function openUpload() {
     document.getElementById("uploadBox").style.display = "block";
 }
 
-function closeUpload() {
+function postVideo() {
+    let file = document.getElementById("videoInput").files[0];
+    let caption = document.getElementById("caption").value;
+
+    if (!file) return alert("Chagua video");
+
+    let url = URL.createObjectURL(file);
+
+    videos.unshift({
+        url,
+        caption,
+        user: currentUser,
+        likes: 0,
+        comments: []
+    });
+
+    save();
+    loadVideos();
+
     document.getElementById("uploadBox").style.display = "none";
 }
 
-/* MUHIMU – LOAD VIDEO AUTOMATIC */
-loadVideos();
+function save() {
+    localStorage.setItem("videos", JSON.stringify(videos));
+}
 
+/* AUTO LOGIN */
+if (currentUser) {
+    document.getElementById("userDisplay").innerText = "User: " + currentUser;
+    showScreen("home");
+    loadVideos();
+}
 </script>
 
 </body>
